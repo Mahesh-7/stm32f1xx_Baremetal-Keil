@@ -9,7 +9,7 @@ void i2c_init(void);
 void i2c_start(void);
 void i2c_slave_address(unsigned char data);
 void i2c_write(unsigned char data);
-void clearAddr(void);
+void i2c_clearAddr(void);
 void i2c_write_string(unsigned char *data);
 void i2c_stop(void);
 void delay(void);
@@ -103,10 +103,10 @@ void i2c_slave_address(unsigned char data)
 	//2.i2c slave address+write
 	I2C1->DR = data;//delay();	
 	
-	clearAddr();
+	i2c_clearAddr();
 }
 
-void clearAddr()
+void i2c_clearAddr()
 {
 		
 	//2.a) check addr clear

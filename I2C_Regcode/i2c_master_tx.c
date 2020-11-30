@@ -6,59 +6,42 @@
 
 void i2c_gpio_init(void);
 void i2c_init(void);
+void i2c_start(void);
+void i2c_slave_address(unsigned char data);
+void i2c_write(unsigned char data);
+void clearAddr(void);
+void i2c_write_string(unsigned char *data);
+void i2c_stop(void);
+void delay(void);
+
+unsigned char * msg=(unsigned char *) "hello embedded world";
+
+unsigned short int dummy_read=0x0000;
+
+int main(void)
+{
+
+	
+	i2c_gpio_init();//delay();		
+	
+	i2c_init();//delay();		
+	
+	i2c_start();
+
+	i2c_slave_address(0xA0);
+	
+	i2c_write_string(msg);
+
+	i2c_stop();
+
+	return 0;
+}
 
 void delay(void)
 {
 	unsigned int i;
 	for(i=0;i<1000;i++);
 	for(i=0;i<1000;i++);
-}
-
-int main(void)
-{
-	unsigned char * msg=(unsigned char *) "hello embedded";
-	unsigned char len= (unsigned char ) strlen((char*)msg);
-	
-	unsigned short int dummy_read=0x0000;
-	
-	i2c_gpio_init();//delay();		
-	
-	i2c_init();//delay();		
-	
-	//1.i2c start
-	I2C1->CR1 |= (1<<8); 
-	
-	while( ! (I2C1->SR1 & (1<<0)));
-	dummy_read=I2C1->SR1;
-	(void)dummy_read;
-	
-	//2.i2c slave address+write
-	I2C1->DR = 0xA0;//5delay();	
-	
-	//2.a) check addr clear
-	while( ! (I2C1->SR1 & (1<<1)));
-	dummy_read=I2C1->SR1;
-	dummy_read=I2C1->SR2;
-	(void)dummy_read;
-	
-	//3. before i2c master write check txe empty
-	while(len>0)
-	{
-		while( ! (I2C1->SR1 & (1<<7)));
-		I2C1->DR = *msg++; //delay();		
-		len--;
-	}
-	
-	//before stop check txe and btf are set
-	while( ! (I2C1->SR1 & (1<<7)));
-	while( ! (I2C1->SR1 & (1<<2)));
-	
-	//4.i2c stop
-	I2C1->CR1 |= (1<<9);
-
-	
-	
-	return 0;
 }
 
 void i2c_gpio_init(void)
@@ -101,6 +84,62 @@ void i2c_init(void)
 	I2C1->TRISE |=9;  //scal rise time config
 	
 	I2C1->CR1 |= (1<<0); //i2c peripheral enable
+}
+
+
+void i2c_start()
+{
+	//1.i2c start
+	I2C1->CR1 |= (1<<8); 
 	
+	while( ! (I2C1->SR1 & (1<<0)));
+	dummy_read=I2C1->SR1;
+	(void)dummy_read;
 	
 }
+
+void i2c_slave_address(unsigned char data)
+{
+	//2.i2c slave address+write
+	I2C1->DR = data;//delay();	
+	
+	clearAddr();
+}
+
+void clearAddr()
+{
+		
+	//2.a) check addr clear
+	while( ! (I2C1->SR1 & (1<<1)));
+	dummy_read=I2C1->SR1;
+	dummy_read=I2C1->SR2;
+	(void)dummy_read;
+	
+}
+void i2c_write_string(unsigned char *data)
+{
+	unsigned char len= (unsigned char ) strlen((char*)data);
+	
+	//3. before i2c master write check txe empty
+	while(len>0)
+	{
+		while( ! (I2C1->SR1 & (1<<7)));
+		I2C1->DR = *data++; //delay();		
+		len--;
+	}
+	
+}
+
+void i2c_stop()
+{
+	//before stop check txe and btf are set
+	while( ! (I2C1->SR1 & (1<<7)));
+	while( ! (I2C1->SR1 & (1<<2)));
+	
+	//4.i2c stop
+	I2C1->CR1 |= (1<<9);
+	
+}
+
+
+

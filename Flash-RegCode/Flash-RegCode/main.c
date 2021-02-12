@@ -140,7 +140,7 @@ int main(void)
 	
 	uart_tx_string(msg);
 
-  Flash_Write(PAGE_118, data);
+  Flash_Write(PAGE_118, data);  //10kb flash extraction has been created
 
 	Flash_Read(PAGE_118,	Rx_Data);
 
@@ -186,7 +186,7 @@ void flash_erase(unsigned int address)
 	
 }
 
-void Flash_Write(unsigned int address , unsigned int *wt_data)
+void Flash_Write(uint32_t address ,uint32_t *wt_data)
 {	
 	static unsigned int idx=0;
 		
@@ -208,7 +208,7 @@ void Flash_Write(unsigned int address , unsigned int *wt_data)
 	{
 		for(idx=0;idx<2	;idx++) //min 2 byte have to write
 		{
-			*(unsigned short int*)address = (unsigned short int)(wt_data[index]>>(16*idx));//little endian
+			*(uint16_t*)address = (uint16_t)(wt_data[index]>>(16*idx));//little endian
 			address+=2;
 			while(FLASH->SR & (1<<0));//check busy			
 		}		

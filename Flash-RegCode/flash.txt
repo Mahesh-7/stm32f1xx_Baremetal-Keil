@@ -1,0 +1,36 @@
+Flash 
+
+For write and erase operations on the Flash memory (write/erase), the internal RC oscillator
+(HSI) must be ON.
+
+● FPEC key register (FLASH_KEYR)
+● Option byte key register (FLASH_OPTKEYR)
+● Flash control register (FLASH_CR)
+● Flash status register (FLASH_SR)
+● Flash address register (FLASH_AR)
+● Option byte register (FLASH_OBR)
+● Write protection register (FLASH_WRPR)
+
+● RDPRT key = 0x00A5
+● KEY1 = 0x45670123
+● KEY2 = 0xCDEF89AB
+
+The main Flash memory programming sequence in standard mode is as follows:
+
+● Check that no main Flash memory operation is ongoing by checking the BSY bit in the
+FLASH_SR register.
+● Set the PG bit in the FLASH_CR register.
+● Perform the data write (half-word) at the desired address.
+● Wait for the BSY bit to be reset.
+● Read the programmed value and verify.
+
+
+Erase:
+
+● Check that no Flash memory operation is ongoing by checking the BSY bit in the
+FLASH_CR register
+● Set the PER bit in the FLASH_CR register
+● Program the FLASH_AR register to select a page to erase
+● Set the STRT bit in the FLASH_CR register
+● Wait for the BSY bit to be reset
+● Read the erased page and verify

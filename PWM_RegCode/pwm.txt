@@ -1,0 +1,5 @@
+afio clk enable 
+pwm channel pin port clk enable
+pwm channel output pin config
+timer config,run
+pwm mode enable->tim_egr,tim ccmr,tim ccer,tim ccr

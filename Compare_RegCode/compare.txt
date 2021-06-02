@@ -1,0 +1,5 @@
+afio clk enable 
+compare channel pin port clk enable
+comapre channel output pin config toggle,high
+timer config,run
+compare mode enable->tim_egr,tim ccmr,tim ccer,tim ccr(set val)

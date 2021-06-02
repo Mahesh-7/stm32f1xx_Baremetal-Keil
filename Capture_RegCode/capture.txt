@@ -1,0 +1,5 @@
+afio clk enable 
+capture channel pin port clk enable
+capture channel input pin config rise,falling
+timer config,run
+capture mode enable->tim_egr,tim ccmr,tim ccer,tim ccr(read val)

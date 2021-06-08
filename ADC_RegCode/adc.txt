@@ -1,0 +1,69 @@
+A/D conversion of the various channels can be performed in single, continuous,
+scan or discontinuous mode. 
+
+12bit adc 
+
+Scan mode for automatic conversion of channel 0 to channel ‘n
+
+ADC conversion time:
+– STM32F103xx performance line devices: 1 µs at 56 MHz (1.17 µs at 72 MHz)
+
+groups:
+
+regular
+injected
+
+adc->smpr2->sample time
+adc->sqrx ->channel selection,conversion length
+
+
+algorithms-pseudo code :
+
+In continuous conversion mode ADC starts another conversion as soon as it finishes one.
+This mode is started either by external trigger or by setting the ADON bit in the ADC_CR2
+register, while the CONT bit is 1.
+After each conversion:
+• If a regular channel was converted:
+– The converted data is stored in the 16-bit ADC_DR register
+– The EOC (End Of Conversion) flag is set
+– An interrupt is generated if the EOCIE is set.
+
+• If an injected channel was converted:
+– The converted data is stored in the 16-bit ADC_DRJ1 register
+– The JEOC (End Of Conversion Injected) flag is set
+– An interrupt is generated if the JEOCIE bit is set.
+
+
+
+Channel-by-channel programmable sample time:
+
+ADC samples the input voltage for a number of ADC_CLK cycles which can be modified using the SMP[2:0] bits in the ADC_SMPR1 and ADC_SMPR2 registers. Each channel can be
+sampled with a different sample time.
+The total conversion time is calculated as follows:
+Tconv = Sampling time + 12.5 cycles
+Example:
+With an ADCCLK = 14 MHz and a sampling time of 1.5 cycles:
+Tconv = 1.5 + 12.5 = 14 cycles = 1 µs
+
+
+
+Reading the temperature:
+
+To use the sensor:
+1. Select the ADCx_IN16 input channel.
+2. Select a sample time of 17.1 µs
+3. Set the TSVREFE bit in the ADC control register 2 (ADC_CR2) to wake up the
+temperature sensor from power down mode.
+4. Start the ADC conversion by setting the ADON bit (or by external trigger).
+5. Read the resulting VSENSE data in the ADC data register
+6. Obtain the temperature using the following formula:
+Temperature (in °C) = {(V25 - VSENSE) / Avg_Slope} + 25.
+Where,
+V25 = VSENSE value for 25° C and
+Avg_Slope = Average Slope for curve between Temperature vs. VSENSE (given in
+mV/° C or µV/ °C).
+Refer to the Electrical characteristics section for the actual values of V25 and
+Avg_Slope.
+Note: The sensor has a startup time after waking from power down mode before it can output
+VSENSE at the correct level. The ADC also has a startup time after power-on, so to minimize
+the delay, the ADON and TSVREFE bits should be set at the same time.

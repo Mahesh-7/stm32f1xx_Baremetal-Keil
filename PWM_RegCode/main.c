@@ -1,16 +1,13 @@
 #include "stm32f10x.h"                  // Device header
 
-void gpio_init();
-	
+void gpio_init();	
 void pwm_init();
 
 
 int main()
 {
-	gpio_init();
-	
-	pwm_init();
-	
+	gpio_init();	
+	pwm_init();	
 	while(1)
 	{
 
@@ -19,19 +16,14 @@ int main()
 	return 0;
 }
 
-
 void gpio_init()
 {
-		RCC->APB2ENR =(1<<0); //afio clk enable
-	
-		RCC->APB2ENR |= (1<<2);//porta clk enable,
-	
+		RCC->APB2ENR =(1<<0); //afio clk enable	
+		RCC->APB2ENR |= (1<<2);//porta clk enable	
 		GPIOA->CRL =0x00000000;//reset
 	
-		//pa0
-	
-		GPIOA->CRL |=(3<<0);//output
-	
+		//pa0	
+		GPIOA->CRL |=(3<<0);//output	
 		GPIOA->CRL |=(2<<2);//afio output	
 }
 
@@ -60,13 +52,12 @@ void pwm_init()
 
   /*CC2E : channel 1 enabled; polarity : active low*/ 
 
-  TIM2->CCER = 0;  //pwm cahnnel1 off
+  TIM2->CCER = 0;  //pwm channel off
 	
 	TIM2->CCR1 = 1000;//50% duty cycle
 
   /* Auto Reload Enable */
-  TIM2->CR1 |= TIM_CR1_ARPE;//buffer enable
-	
+  TIM2->CR1 |= TIM_CR1_ARPE;//buffer enable	
 	TIM2->CCER |= TIM_CCER_CC1E;//pwm enable
 
 	/* Enable Timer Counter */

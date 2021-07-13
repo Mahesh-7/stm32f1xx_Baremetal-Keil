@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'pwm' 
+ * Project: 'PWM' 
  * Target:  'Target 1' 
  */
 

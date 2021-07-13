@@ -15,7 +15,7 @@ int main()
 	
 	while(1)
 	{
-		#if 0 //dont use if read TIM2->CCR1 register
+		#if 1 //dont use if read TIM2->CCR1 register
 		if(TIM2->SR &(1<<1))
 		{
 			TIM2->SR &=~(1<<1);//capture flag reset
@@ -43,16 +43,6 @@ void gpio_init()
 	
 		GPIOA->CRL |=(1<<2);//input	floating
 }
-
-/*******Set timer 2 Period  **************
-  PWM Frequency                 = 1000Hz
-  Timer Clock                   = 8mhz = 8000000 Hz
-  Time Period Required          = (1/1000Hz) = 0.001 Seconds=1ms
-	timer clk Formula							= fosc/(pre+1)
-  Prescalar + 1                 = 8000000/1000hz)
-  Prescalar                     = 7999  
-	Auto_Reload										= 2000
-***********************************************/
 
 void capture_init()
 {

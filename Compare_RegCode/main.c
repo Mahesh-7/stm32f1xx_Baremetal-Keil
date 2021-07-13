@@ -13,7 +13,7 @@ int main()
 	
 	while(1)
 	{
-		#if 0
+		#if 1
 		if(TIM2->SR &(1<<1))
 		{
 			TIM2->SR &=~(1<<1);//compare flag reset
@@ -27,28 +27,15 @@ int main()
 
 void gpio_init()
 {
-		RCC->APB2ENR =(1<<0); //afio clk enable
-	
-		RCC->APB2ENR |= (1<<2);//porta clk enable,
-	
+		RCC->APB2ENR =(1<<0); //afio clk enable	
+		RCC->APB2ENR |= (1<<2);//porta clk enable	
 		GPIOA->CRL =0x00000000;//reset
 	
-		//pa0
-	
-		GPIOA->CRL |=(3<<0);//output
-	
+		//pa0	
+		GPIOA->CRL |=(3<<0);//output	
 		GPIOA->CRL |=(2<<2);//afio output	
 }
 
-/*******Set timer 2 Period**************
-  PWM Frequency                 = 1000Hz
-  Timer Clock                   = 8mhz = 8000000 Hz
-  Time Period Required          = (1/1000Hz) = 0.001 Seconds=1ms
-	timer clk Formula							= fosc/(pre+1)
-  Prescalar + 1                 = 8000000/1000hz)
-  Prescalar                     = 7999  
-	Auto_Reload										= 2000
-***********************************************/
 
 void compare_init()
 {
@@ -65,7 +52,7 @@ void compare_init()
 
   /*CC2E : channel 1 enabled; polarity : active low*/ 
 
-  TIM2->CCER = 0;  //compare off
+  TIM2->CCER = 1;  //compare on
 	
 	TIM2->CCR1 = 1000;//compare val
 

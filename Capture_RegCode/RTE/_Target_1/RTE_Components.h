@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'capture' 
+ * Project: 'Capture' 
  * Target:  'Target 1' 
  */
 

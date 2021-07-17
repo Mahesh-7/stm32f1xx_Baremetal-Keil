@@ -74,7 +74,7 @@ void spi_master_init(void)
 {
 	SPI1->CR1 &=0x0000;  	//reset
 	
-	SPI1->CR1 |= 5<<3;		//  Baud rate control  fPCLK/64
+	SPI1->CR1 |= 5<<3;		//  Baud rate control  fPCLK/64 for 60mhz.ie.1mbps speed
 	
 	SPI1->CR1 |= 1<<9;		//  Software slave management enabled
 	

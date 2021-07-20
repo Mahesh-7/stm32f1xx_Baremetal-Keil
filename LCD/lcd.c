@@ -97,9 +97,9 @@ void LCD_Command(unsigned char cmd)
 {
 	unsigned char i,val[8];
 	//RS for cmd mode
-	GPIO_Write_Data(PB,P3,0);
+	GPIO_Write_Data(PB,P6,0);
 	//RW
-	GPIO_Write_Data(PB,P4,0);
+	GPIO_Write_Data(PB,P7,0);
 	
 	//Command send to LCD
 	for(i=0;i<8;i++)
@@ -127,9 +127,9 @@ void LCD_Char(unsigned char data)
 {
 	unsigned char i,val[8];
 	//RS for data mode
-	GPIO_Write_Data(PB,P3,1);
+	GPIO_Write_Data(PB,P6,1);
 	//RW
-	GPIO_Write_Data(PB,P4,0);
+	GPIO_Write_Data(PB,P7,0);
 	
 	//DATA send to LCD
 	for(i=0;i<8;i++)
@@ -172,7 +172,7 @@ void LCD_Init()
 int main()
 {
 	LCD_Init();
-	LCD_Char('1');
+	LCD_Char('a');
 	//LCD_String((unsigned char*)"Hello");
 	
 	while(1)

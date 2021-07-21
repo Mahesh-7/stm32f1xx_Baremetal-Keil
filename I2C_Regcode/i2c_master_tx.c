@@ -134,7 +134,7 @@ void i2c_write_string(unsigned char *data)
 
 void i2c_slave_init(void)
 {
-		//i2c master mode
+	//i2c slave mode
 	I2C1->CR1 &=0x0000;
 	I2C1->CR2 &=0x0000;
 	

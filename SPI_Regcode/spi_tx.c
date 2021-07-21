@@ -4,6 +4,8 @@
 
 void spi_master_init(void);
 
+void spi_slave_init(void);
+
 void spi_tx(unsigned char data);
 
 void spi_rx(void);
@@ -42,7 +44,7 @@ void spi_gpio_init()
 {
 	//spi1:  PA4,5,6,7  with some timer alter function
 	
-	//PA4-nss
+	//PA4-nss (output)
 	//PA5-clk  (output)
 	//PA6-miso (input)
 	//PA7-mosi (output)
@@ -56,9 +58,17 @@ void spi_gpio_init()
 	//2.gpio pins config for spi1	
 	GPIOA->CRL &= 0x00000000;	//reset
 	
+	//nss PA4
+	GPIOA->CRL |=  3<<16;
+	GPIOA->CRL |=  2<<18;
+	
 	//sclk PA5
 	GPIOA->CRL |=  3<<20;
 	GPIOA->CRL |=  2<<22;
+	
+	//miso PA6
+	GPIOA->CRL &=  ~(3<<24);
+	GPIOA->CRL |=  1<<26;
 	
 	//mosi PA7
 	GPIOA->CRL |=  3<<28;
@@ -85,9 +95,26 @@ void spi_master_init(void)
 	SPI1->CR1 |= 1<<6;		//	SPI enable
 }
 
+void spi_slave_init()
+{
+	SPI1->CR1 &=0x0000;  	//reset	
+	
+	//SPI1->CR1 |= 1<<9;		//  Software slave management enabled
+	
+	//SPI1->CR1 |= 1<<8;		//  SSI-Internal slave select NSS high1	
+	
+	//cpol and cpha both are disabled	
+	
+	SPI1->CR2 |= 1<<2;		//  Hardware slave management enabled, SS output enable, SS output is enabled in master mode and when the cell is enabled. The cell cannot work in a multimaster environment
+	
+	SPI1->CR1 &= ~(1<<2);		//  Slave configuration
+	
+	SPI1->CR1 |= 1<<6;		//	SPI enable
+	
+}
+
 void spi_tx(unsigned char data)
 {
-
 
 	while(!((SPI1->SR)&(1<<1)));  //check tx buffer empty
 	SPI1->DR = data;
@@ -117,7 +144,6 @@ void spi_tx_string(unsigned char *data)
 void delay(void)
 {
 	unsigned int i=0;
-	
 	for(i=0;i<1000;i++);
 	for(i=0;i<100;i++);
 }

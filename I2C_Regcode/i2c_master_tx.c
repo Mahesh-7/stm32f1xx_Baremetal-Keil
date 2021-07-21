@@ -6,12 +6,15 @@
 
 void i2c_gpio_init(void);
 void i2c_init(void);
+void i2c_slave_init(void);
 void i2c_start(void);
 void i2c_slave_address(unsigned char data);
 void i2c_write(unsigned char data);
 void i2c_clearAddr(void);
 void i2c_write_string(unsigned char *data);
+unsigned char read();
 void i2c_stop(void);
+
 void delay(void);
 
 unsigned char * msg=(unsigned char *) "hello embedded world";
@@ -20,7 +23,6 @@ unsigned short int dummy_read=0x0000;
 
 int main(void)
 {
-
 	
 	i2c_gpio_init();//delay();		
 	
@@ -123,11 +125,35 @@ void i2c_write_string(unsigned char *data)
 	//3. before i2c master write check txe empty
 	while(len>0)
 	{
-		while( ! (I2C1->SR1 & (1<<7)));
+		while( ! (I2C1->SR1 & (1<<7)));//check TXE flag
 		I2C1->DR = *data++; //delay();		
 		len--;
 	}
 	
+}
+
+void i2c_slave_init(void)
+{
+		//i2c master mode
+	I2C1->CR1 &=0x0000;
+	I2C1->CR2 &=0x0000;
+	
+	I2C1->CR1 |= (1<<10);  //ack enable
+	
+	I2C1->OAR1 =0xA0<<1;//slave address 0xA0
+	
+	I2C1->CR1 |= (1<<0); //i2c peripheral enable
+	
+}
+
+unsigned char read()
+{
+	//check addr clear
+	while( ! (I2C1->SR1 & (1<<1)));
+	dummy_read=I2C1->SR1;
+	dummy_read=I2C1->SR2;
+	while( ! (I2C1->SR1 & (1<<6)));//check RxNE
+	return I2C1->DR;
 }
 
 void i2c_stop()

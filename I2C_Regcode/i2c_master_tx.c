@@ -54,7 +54,7 @@ void i2c_gpio_init(void)
 	
 	RCC->APB1ENR |= (1<<21); //enable i2c clk
 	RCC->APB2ENR |= (1<<3);  //enable portb clk
-	//RCC->APB2ENR |=(1<<0);  //alternate function clk enable
+	RCC->APB2ENR |=(1<<0);  //alternate function clk enable
 	
 	GPIOB->CRL &=0x00000000;
 	
